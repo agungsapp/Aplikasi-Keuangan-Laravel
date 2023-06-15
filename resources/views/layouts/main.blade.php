@@ -35,7 +35,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-birthday-cake"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Cake</div>
+        <div class="sidebar-brand-text mx-3">Cake - Admin</div>
       </a>
 
       <!-- Divider -->
@@ -55,23 +55,52 @@
       <div class="sidebar-heading">
         MASTER DATA
       </div>
-      <li class="nav-item {{ \Route::is('admin.kategori.index') ? 'active' : '' }}">
+
+      {{-- <li class="nav-item {{ \Route::is('admin.kategori.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.kategori.index') }}">
           <i class="fas fa-fw fa-list"></i>
           <span>Kategori</span></a>
+      </li> --}}
+
+
+
+      {{-- kategori colapse start --}}
+      <li class="nav-item {{ \Route::is('admin.kategori.*') ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+          aria-controls="collapseTwo">
+          <i class="fas fa-fw fa-list"></i>
+          <span>Kategori</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Manajemen Kategori</h6>
+            {{-- colapse item --}}
+            <a class="collapse-item {{ \Route::is('admin.kategori.index') ? 'active' : '' }}"
+              href="{{ route('admin.kategori.index') }}">Jenis Toples</a>
+            <a class="collapse-item {{ \Route::is('admin.kategori.qty.index') ? 'active' : '' }}"
+              href="{{ route('admin.kategori.qty.index') }}">QTY</a>
+          </div>
+        </div>
       </li>
-      <li class="nav-item">
+      {{-- kategori colapse end --}}
+
+
+
+      {{-- <li class="nav-item">
         <a class="nav-link" href="suplier">
           <i class="fas fa-fw fa-box"></i>
           <span>Suplier</span></a>
-      </li>
+      </li> --}}
+
       <li class="nav-item {{ \Route::is('admin.produk.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.produk.index') }}">
           <i class="fas fa-fw fa-boxes"></i>
           <span>Produk</span></a>
       </li>
       {{-- master data end --}}
+
       {{-- manajemen stok start--}}
+      {{--
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
         MANAGEMENT STOK
@@ -80,7 +109,7 @@
         <a class="nav-link" href="index.html">
           <i class="fas fa-fw fa-store"></i>
           <span>Stok</span></a>
-      </li>
+      </li> --}}
       {{-- manajemen stok end --}}
 
       {{-- transaksi bar start --}}
@@ -210,6 +239,10 @@
     </div>
   </div>
 
+  {{-- confirm delete --}}
+
+
+
   <!-- Bootstrap core JavaScript-->
   <script src="../assets/vendor/jquery/jquery.min.js"></script>
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -219,11 +252,66 @@
 
   <!-- Custom scripts for all pages-->
   <script src="../assets/js/sb-admin-2.min.js"></script>
+
+  @if (\Route::is('admin.dashboard.index'))
+
   <!-- Page level plugins -->
   <script src="../assets/vendor/chart.js/Chart.min.js"></script>
   <!-- Page level custom scripts -->
   <script src="../assets/js/demo/chart-area-demo.js"></script>
   <script src="../assets/js/demo/chart-pie-demo.js"></script>
+  @endif
+
+
+
+
+  <script>
+    // format rupiah dari form input dengan id harga dan label dengan id label-rupiah
+  $(document).ready(function() {
+    // input modal
+    $('#harga').on('input', function() {
+    var value = $(this).val();
+    if (value) {
+    var formattedValue = formatRupiah(value);
+    $('#label-rupiah').text('Harga : ' + formattedValue);
+    } else {
+    $('#label-rupiah').text('Harga : 0');
+    }
+    });
+
+    function formatRupiah(angka) {
+    var numberString = angka.toString().replace(/\D/g, '');
+    var formattedNumber = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR'
+    }).format(numberString);
+    return formattedNumber.substr(0, formattedNumber.length - 3);
+    }
+    // input create
+    $('#harga-create').on('input', function() {
+    var value = $(this).val();
+    if (value) {
+    var formattedValue = formatRupiah(value);
+    $('#label-rupiah-create').text('Harga : ' + formattedValue);
+    } else {
+    $('#label-rupiah-create').text('Harga : 0');
+    }
+    });
+
+    function formatRupiah(angka) {
+    var numberString = angka.toString().replace(/\D/g, '');
+    var formattedNumber = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR'
+    }).format(numberString);
+    return formattedNumber.substr(0, formattedNumber.length - 3);
+    }
+  });
+
+  function konfirmasiHapus(){
+  confirm('Yakin akan menghapus data ?');
+  }
+  </script>
 
 </body>
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\QtyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,10 @@ Route::get('/', function () {
 
 // new route
 Route::name('admin.')->group(function () {
+    Route::name('kategori.')->group(function () {
+        Route::resource('jenis', KategoriController::class);
+        Route::resource('qty', QtyController::class);
+    });
     Route::resource('dashboard', DashboardController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('produk', ProdukController::class);

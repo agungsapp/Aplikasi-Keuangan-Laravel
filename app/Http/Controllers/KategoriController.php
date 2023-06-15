@@ -18,7 +18,7 @@ class KategoriController extends Controller
         $data = [
             'kategori' => KategoriModel::orderBy('kategori', 'desc')->paginate(5),
         ];
-        return view('admin.kategori.index', $data);
+        return view('admin.kategori.jenis', $data);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProdukModel;
 use Illuminate\Http\Request;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ProdukController extends Controller
 {
@@ -15,7 +16,19 @@ class ProdukController extends Controller
     public function index()
     {
         //
-        return view('admin.produk.index');
+        $id = IdGenerator::generate([
+            'table' => 'produk',
+            'field' => 'kode',
+            'length' => 4,
+            'prefix' => 'KD-'
+        ]);
+
+        $data = [
+            'data' => ProdukModel::all(),
+            'id' => $id
+        ];
+
+        return view('admin.produk.index', $data);
     }
 
     /**
@@ -37,6 +50,23 @@ class ProdukController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'name' => 'required|unique:produk,name',
+            'harga' => 'required|min:3'
+        ], [
+            'name.required' => 'nama produk tidak boleh kosong !',
+            'name.unique' => 'nama produk sudah ada !',
+            'harga.required' => 'harga produk tidak boleh kosong !',
+            'harga.min' => 'harga produk minimal 3 digit (misal. 1000) !',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'harga' => $request->harga,
+            'kode' => $request->kode,
+        ];
+        ProdukModel::create($data);
+        return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil di tambahkan !');
     }
 
     /**
@@ -68,9 +98,26 @@ class ProdukController extends Controller
      * @param  \App\Models\ProdukModel  $produkModel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProdukModel $produkModel)
+    public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            'nameedit' => 'required|unique:produk,name',
+            'hargaedit' => 'required|min:3'
+        ], [
+            'nameedit.required' => 'nama produk tidak boleh kosong !',
+            'nameedit.unique' => 'nama produk sudah ada !',
+            'hargaedit.required' => 'harga produk tidak boleh kosong !',
+            'hargaedit.min' => 'harga produk minimal 3 digit (misal. 1000) !',
+        ]);
+
+        $data = [
+            'name' => $request->nameedit,
+            'harga' => $request->hargaedit,
+            'kode' => $request->kodeedit,
+        ];
+        ProdukModel::where('id', $id)->update($data);
+        return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil di update !');
     }
 
     /**
@@ -79,8 +126,10 @@ class ProdukController extends Controller
      * @param  \App\Models\ProdukModel  $produkModel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProdukModel $produkModel)
+    public function destroy($id)
     {
         //
+        ProdukModel::where('id', $id)->delete();
+        return redirect()->route('admin.produk.index')->with('success', 'Berhasil delete data!');
     }
 }

@@ -1,10 +1,10 @@
 @extends('layouts.main')
 @section('content')
 <div class="row">
-  <div class="col-7">
+  <div class="col-9">
     <div class="card shadow-md">
       <div class="card-header bg-primary text-white">
-        <h3>Data Kategori</h3>
+        <h5>Data kategori jenis toples</h5>
       </div>
       <div class="card-body">
         <div class="table-responsive">
@@ -76,7 +76,7 @@
                   <form class="d-inline" action="{{ url('kategori/'. $k->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" onclick="konfirmasiHapus()" class="btn btn-danger">Delete</button>
                   </form>
 
                   {{-- delete button end --}}
@@ -100,10 +100,10 @@
     </div>
   </div>
   {{-- colom add data kategori --}}
-  <div class="col-5">
+  <div class="col-3">
     <div class="card shadow-md">
       <div class="card-header bg-primary text-white">
-        <h3>Tambah Data</h3>
+        <h5>Tambah Data</h5>
       </div>
       <div class="card-body">
         <form action="{{ route('admin.kategori.store') }}" method="POST">
