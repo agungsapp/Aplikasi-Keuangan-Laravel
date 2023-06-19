@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>ERP</title>
+<title>ERP | Admin</title>
 
   <!-- Custom fonts for this template-->
   <link href="../assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -139,8 +139,8 @@
           <i class="fas fa-fw fa-user-circle"></i>
           <span>Role</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="index.html">
+<li class="nav-item {{ \Route::is('admin.user.*') ? 'active' : '' }}">
+  <a class="nav-link" href="{{ route('admin.user.index') }}">
           <i class="fas fa-fw fa-users"></i>
           <span>User</span></a>
       </li>
@@ -181,13 +181,13 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-          @if (Session::has('success'))
+{{-- @if (Session::has('success'))
           <div class="pt-3">
             <div class="alert alert-success" role="alert">
               {{ Session::get('success') }}
             </div>
           </div>
-          @endif
+@endif --}}
 
           <!-- Page Heading -->
           @yield('content')
@@ -262,7 +262,8 @@
   <script src="../assets/js/demo/chart-pie-demo.js"></script>
   @endif
 
-
+{{-- sweet alert --}}
+@include('sweetalert::alert')
 
 
   <script>

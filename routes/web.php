@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\QtyController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +34,7 @@ Route::name('admin.')->group(function () {
     Route::resource('dashboard', DashboardController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('produk', ProdukController::class);
+    Route::resource('user', UserController::class);
 });
 
 
