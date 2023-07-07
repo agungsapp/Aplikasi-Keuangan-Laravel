@@ -20,6 +20,11 @@
   <!-- Custom styles for this template-->
   <link href="../assets/css/sb-admin-2.min.css" rel="stylesheet">
 
+  {{-- data table css --}}
+  <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  {{-- select 2 css --}}
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 
 <body id="page-top">
@@ -35,7 +40,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-birthday-cake"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Cake - Admin</div>
+<div class="sidebar-brand-text mx-3">Ny. Fifin <br> {{ Auth::user()->role }}</div>
       </a>
 
       <!-- Divider -->
@@ -51,10 +56,7 @@
       <!-- Divider -->
       <hr class="sidebar-divider">
 
-      {{-- master data start --}}
-      <div class="sidebar-heading">
-        MASTER DATA
-      </div>
+
 
       {{-- <li class="nav-item {{ \Route::is('admin.kategori.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.kategori.index') }}">
@@ -62,29 +64,37 @@
           <span>Kategori</span></a>
       </li> --}}
 
+{{-- menu admin only start !!!! --}}
+@if (Auth::user()->role === 'admin')
+
+{{-- master data start --}}
+<div class="sidebar-heading">
+  MASTER DATA
+</div>
+
+{{-- kategori colapse start --}}
+<li class="nav-item {{ \Route::is('admin.kategori.*') ? 'active' : '' }}">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKategori" aria-expanded="true"
+  aria-controls="collapseKategori">
+  <i class="fas fa-fw fa-list"></i>
+  <span>Kategori</span>
+</a>
+<div id="collapseKategori" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+    <h6 class="collapse-header">Manajemen Kategori</h6>
+    {{-- colapse item --}}
+    <a class="collapse-item {{ \Route::is('admin.kategori.index') ? 'active' : '' }}"
+      href="{{ route('admin.kategori.index') }}">Jenis Toples</a>
+    <a class="collapse-item {{ \Route::is('admin.kategori.qty.index') ? 'active' : '' }}"
+      href="{{ route('admin.kategori.qty.index') }}">QTY</a>
+  </div>
+</div>
+</li>
+{{-- kategori colapse end --}}
+@endif
 
 
-      {{-- kategori colapse start --}}
-      <li class="nav-item {{ \Route::is('admin.kategori.*') ? 'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
-          aria-controls="collapseTwo">
-          <i class="fas fa-fw fa-list"></i>
-          <span>Kategori</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Manajemen Kategori</h6>
-            {{-- colapse item --}}
-            <a class="collapse-item {{ \Route::is('admin.kategori.index') ? 'active' : '' }}"
-              href="{{ route('admin.kategori.index') }}">Jenis Toples</a>
-            <a class="collapse-item {{ \Route::is('admin.kategori.qty.index') ? 'active' : '' }}"
-              href="{{ route('admin.kategori.qty.index') }}">QTY</a>
-          </div>
-        </div>
-      </li>
-      {{-- kategori colapse end --}}
-
-
+{{-- menu admin only end !!!! --}}
 
       {{-- <li class="nav-item">
         <a class="nav-link" href="suplier">
@@ -92,12 +102,18 @@
           <span>Suplier</span></a>
       </li> --}}
 
+{{-- admin only start !!! --}}
+@if (Auth::user()->role === 'admin')
       <li class="nav-item {{ \Route::is('admin.produk.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.produk.index') }}">
           <i class="fas fa-fw fa-boxes"></i>
           <span>Produk</span></a>
       </li>
       {{-- master data end --}}
+@endif
+
+
+{{-- admin only end!!! --}}
 
       {{-- manajemen stok start--}}
       {{--
@@ -117,11 +133,35 @@
       <div class="sidebar-heading">
         TRANSAKSI
       </div>
-      <li class="nav-item">
+<li class="nav-item {{ \Route::is('staff.penjualan.*') ? 'active' : '' }}">
+  <a class="nav-link" href="{{ route('staff.penjualan.index') }}">
+    <i class="fas fa-fw fa-arrow-up"></i>
+    <span>Penjualan</span></a>
+</li>
+{{-- kategori colapse start --}}
+<li class="nav-item {{ \Route::is('admin.kategori.*') ? 'active' : '' }}">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTransaksi" aria-expanded="true"
+    aria-controls="collapseTransaksi">
+    <i class="fas fa-fw fa-arrow-up"></i>
+    <span>Penjualan</span>
+  </a>
+  <div id="collapseTransaksi" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <h6 class="collapse-header">Transaksi</h6>
+      {{-- colapse item --}}
+      <a class="collapse-item {{ \Route::is('staff.penjualan.index') ? 'active' : '' }}"
+        href="{{ route('staff.penjualan.index') }}">Transaksi Lama</a>
+      <a class="collapse-item {{ \Route::is('staff.penjualan.create') ? 'active' : '' }}"
+        href="{{ route('staff.penjualan.create') }}">Transaksi Baru</a>
+    </div>
+  </div>
+</li>
+{{-- kategori colapse end --}}
+{{-- <li class="nav-item">
         <a class="nav-link" href="index.html">
           <i class="fas fa-fw fa-arrow-up"></i>
           <span>Produk keluar</span></a>
-      </li>
+</li> --}}
       <li class="nav-item">
         <a class="nav-link" href="index.html">
           <i class="fas fa-fw fa-arrow-down"></i>
@@ -129,23 +169,27 @@
       </li>
       {{-- transaksi bar end --}}
 
-      {{-- management user bar start --}}
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        MANAGEMENT USER
-      </div>
-      <li class="nav-item">
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-user-circle"></i>
-          <span>Role</span></a>
-      </li>
+{{-- admin only start --}}
+@if (Auth::user()->role === 'admin')
+{{-- management user bar start --}}
+<hr class="sidebar-divider">
+<div class="sidebar-heading">
+  MANAGEMENT USER
+</div>
+<li class="nav-item">
+  <a class="nav-link" href="index.html">
+    <i class="fas fa-fw fa-user-circle"></i>
+    <span>Role</span></a>
+</li>
 <li class="nav-item {{ \Route::is('admin.user.*') ? 'active' : '' }}">
-  <a class="nav-link" href="{{ route('admin.user.index') }}">
-          <i class="fas fa-fw fa-users"></i>
-          <span>User</span></a>
-      </li>
-      {{-- management user bar end --}}
+<a class="nav-link" href="{{ route('admin.user.index') }}">
+  <i class="fas fa-fw fa-users"></i>
+  <span>User</span></a>
+</li>
+{{-- management user bar end --}}
+@endif
 
+{{-- admin only end --}}
       {{-- laporan bar start --}}
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
@@ -202,7 +246,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2020</span>
+<span>Copyright &copy; Sanca-Dev {{ date('Y') }}</span>
           </div>
         </div>
       </footer>
@@ -225,23 +269,21 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+<h5 class="modal-title" id="exampleModalLabel">Logout ?</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+<div class="modal-body">Yakin akan keluar dari akun {{ Auth::user()->name }} ?</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
+<a class="btn btn-primary" href="{{ url('logout') }}">Yakin</a>
         </div>
       </div>
     </div>
   </div>
 
   {{-- confirm delete --}}
-
-
 
   <!-- Bootstrap core JavaScript-->
   <script src="../assets/vendor/jquery/jquery.min.js"></script>
@@ -253,15 +295,22 @@
   <!-- Custom scripts for all pages-->
   <script src="../assets/js/sb-admin-2.min.js"></script>
 
+  {{-- script data tables --}}
+  <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+  
+{{-- jquery un compress --}}
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
+{{-- select2 js --}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
   @if (\Route::is('admin.dashboard.index'))
 
-  <!-- Page level plugins -->
-  <script src="../assets/vendor/chart.js/Chart.min.js"></script>
-  <!-- Page level custom scripts -->
-  <script src="../assets/js/demo/chart-area-demo.js"></script>
-  <script src="../assets/js/demo/chart-pie-demo.js"></script>
   @endif
 
+@stack('scripts')
 {{-- sweet alert --}}
 @include('sweetalert::alert')
 

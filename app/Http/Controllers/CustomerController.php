@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DashboardModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +14,6 @@ class DashboardController extends Controller
     public function index()
     {
         //
-      
-        return view('admin.dashboard.index');
     }
 
     /**
@@ -39,15 +35,21 @@ class DashboardController extends Controller
     public function store(Request $request)
     {
         //
+
+
+        $request->validate([
+            'namacustomer' => 'required|unique:customer,name',
+            'alamatcustomer' => 'required'
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\DashboardModel  $dashboardModel
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(DashboardModel $dashboardModel)
+    public function show($id)
     {
         //
     }
@@ -55,10 +57,10 @@ class DashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\DashboardModel  $dashboardModel
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(DashboardModel $dashboardModel)
+    public function edit($id)
     {
         //
     }
@@ -67,10 +69,10 @@ class DashboardController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\DashboardModel  $dashboardModel
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DashboardModel $dashboardModel)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -78,10 +80,10 @@ class DashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\DashboardModel  $dashboardModel
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DashboardModel $dashboardModel)
+    public function destroy($id)
     {
         //
     }
