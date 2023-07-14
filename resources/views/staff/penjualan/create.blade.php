@@ -122,7 +122,7 @@
 																				@enderror
 																		</div>
 																</div>
-																<button type="submit" class="btn btn-primary">Tambah</button>
+																<button type="submit" class="btn btn-primary"><i class="fa fa-cart-arrow-down mr-2"></i>Tambah Keranjang</button>
 
 												</div>
 												<div class="col-4 offset-1">

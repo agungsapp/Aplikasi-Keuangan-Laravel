@@ -6,8 +6,38 @@ use App\Models\penjualan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use PDF;
+
 class LaporanController extends Controller
 {
+
+    public function exportPDF()
+    {
+        $data = DB::table('penjualan')
+            ->join('detail_transaksi', 'penjualan.kode_trx', '=', 'detail_transaksi.kode_trx')
+            ->orderBy('penjualan.nama_customer')
+            ->select('penjualan.nama_customer', 'detail_transaksi.*')
+            ->get()
+            ->groupBy('nama_customer')
+            ->map(function ($items) {
+                $items = $items->toArray();
+                $rowspan = count($items);
+                $no = 1;
+                foreach ($items as &$item) {
+                    $item->rowspan = $rowspan;
+                    $item->no = $no++;
+                }
+                return $items;
+            })
+            ->flatten();
+
+        $pdf = PDF::loadview('staff.laporan.export', compact('data'));
+
+        return $pdf->download('laporan.pdf');
+
+        // return view('staff.laporan.export', compact('data'));
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\DashboardModel;
+use App\Models\penjualan;
+use App\Models\ProdukModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,8 +18,12 @@ class DashboardController extends Controller
     public function index()
     {
         //
-      
-        return view('admin.dashboard.index');
+
+        $data = [
+            'produk' => ProdukModel::count(),
+            'penjualan' => penjualan::count()
+        ];
+        return view('admin.dashboard.index', $data);
     }
 
     /**

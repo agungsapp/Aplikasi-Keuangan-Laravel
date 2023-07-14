@@ -72,6 +72,7 @@ Route::get('checkout', [PenjualanController::class, 'checkout'])->name('checkout
 Route::post('simpan-transaksi', [PenjualanController::class, 'simpanTransaksi'])->name('simpantransaksi');
 Route::post('kosongkankeranjang', [PenjualanController::class, 'kosongkanKeranjang'])->name('kosongkankeranjang');
 Route::resource('laporan', LaporanController::class);
+Route::get('export', [LaporanController::class, 'exportPDF'])->name('export');
 
 
 // Route::name('staff.')->group(function () {
