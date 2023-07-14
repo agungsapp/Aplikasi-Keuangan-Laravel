@@ -3,6 +3,7 @@
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\ProdukController;
@@ -68,8 +69,10 @@ Route::get('/getprodukbyid/{kode}', [ProdukController::class, 'getprodukbyid']);
 Route::post('/tambahkeranjang', [PenjualanController::class, 'tambahkeranjang'])->name('tambahkeranjang');
 Route::delete('/deletekeranjang', [PenjualanController::class, 'delete_keranjang'])->name('deletekeranjang');
 Route::get('checkout', [PenjualanController::class, 'checkout'])->name('checkout');
+Route::post('simpan-transaksi', [PenjualanController::class, 'simpanTransaksi'])->name('simpantransaksi');
 Route::post('kosongkankeranjang', [PenjualanController::class, 'kosongkanKeranjang'])->name('kosongkankeranjang');
-
+Route::resource('laporan', LaporanController::class);
+Route::get('export', [LaporanController::class, 'exportPDF'])->name('export');
 
 
 // Route::name('staff.')->group(function () {

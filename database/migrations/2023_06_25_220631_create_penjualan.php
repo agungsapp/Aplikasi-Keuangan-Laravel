@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('penjualan', function (Blueprint $table) {
             $table->id();
             $table->string('kode_trx');
-            $table->string('id_customer')->nullable();
+            $table->string('nama_customer')->nullable();
             $table->integer('jumlah');
             $table->integer('total');
             $table->timestamps();

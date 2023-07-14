@@ -23,6 +23,50 @@ class PenjualanController extends Controller
 
         return response()->json(['message' => 'Cart berhasil dihapus.']);
     }
+    // gantinya checkout yang di bawah ini 
+    public function simpanTransaksi(Request $request)
+    {
+        // Ambil data dari permintaan AJAX
+        $namaCustomer = $request->input('nama_customer');
+        $cart = session()->get('cart', []);
+
+        // Simpan data transaksi ke dalam database
+        $nomorTransaksi = 'TRX-' . uniqid();
+
+        $jumlah = 0;
+        $total = 0;
+
+        foreach ($cart as $item) {
+            DetailTransaksiModel::create([
+                'kode_trx' => $nomorTransaksi,
+                'kode_produk' => $item['kode_produk'],
+                'jenis_toples' => $item['jenis_toples'],
+                // 'qty' => $item['qty'],
+                'jumlah' => $item['jumlah_beli'],
+                'harga_satuan' => $item['harga_satuan'],
+                'sub_total' => $item['subtotal'],
+                // 'diskon' => 0,
+                // Tambahkan kolom lain sesuai kebutuhan Anda
+            ]);
+
+            $jumlah += $item['jumlah_beli'];
+            $total += $item['harga_satuan'] * $item['jumlah_beli'];
+        }
+
+        penjualan::create([
+            'kode_trx' => $nomorTransaksi,
+            'nama_customer' => $namaCustomer,
+            'jumlah' => $jumlah,
+            'total' => $total,
+        ]);
+
+        // Hapus data keranjang dari session
+        session()->forget('cart');
+
+        return response()->json(['message' => 'Transaksi berhasil disimpan.']);
+    }
+
+
 
     public function checkout()
     {
@@ -94,7 +138,7 @@ class PenjualanController extends Controller
     public function index()
     {
         //
-
+   
         return view('staff.penjualan.index')->with('data', penjualan::all());
     }
 
@@ -167,7 +211,7 @@ class PenjualanController extends Controller
         }
 
         if (isset($cart[$request->produk])) {
-            $cart[$request->produk]['jumlah_beli']++;
+            $cart[$request->produk]['jumlah_beli'] += $jumlah_beli;
         } else {
             $cart[$request->produk] = [
                 'kode_produk' => $request->produk,
@@ -230,6 +274,11 @@ class PenjualanController extends Controller
     public function show(penjualan $penjualan)
     {
         //
+        $data = DetailTransaksiModel::join('produk', 'detail_transaksi.kode_produk', '=', 'produk.kode')
+        ->where('detail_transaksi.kode_trx', $penjualan->kode_trx)
+            ->get(['detail_transaksi.*', 'produk.name']);
+
+        return view('staff.penjualan.show', compact('data'));
     }
 
     /**
@@ -253,6 +302,16 @@ class PenjualanController extends Controller
     public function update(Request $request, penjualan $penjualan)
     {
         //
+        // Validasi inputan jika diperlukan
+        $validatedData = $request->validate([
+            'nama_customer' => 'required',
+        ]);
+
+        // Perbarui data nama pelanggan pada objek penjualan
+        $penjualan->nama_customer = $validatedData['nama_customer'];
+        $penjualan->save();
+
+        return redirect()->route('staff.penjualan.index')->with('toast_success', 'Berhasil melakukan update nama customer !');
     }
 
     /**
@@ -264,5 +323,14 @@ class PenjualanController extends Controller
     public function destroy(penjualan $penjualan)
     {
         //
+        $kodeTrx = $penjualan->kode_trx;
+
+        // Hapus data detail transaksi dengan kode transaksi yang sama
+        DetailTransaksiModel::where('kode_trx', $kodeTrx)->delete();
+
+        // Hapus data penjualan dari database
+        $penjualan->delete();
+
+        return redirect()->route('staff.penjualan.index')->with('toast_success', 'Berhasil menghapus data transaksi');
     }
 }
