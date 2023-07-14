@@ -8,6 +8,23 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ProdukController extends Controller
 {
+
+    public function getprodukbyid($kode)
+    {
+        // Lakukan logika untuk mengambil informasi harga barang satuan berdasarkan $kode
+        // Misalnya, melakukan query ke database untuk mendapatkan data produk berdasarkan $kode
+        $produk = ProdukModel::where('kode', $kode)->first();
+
+        // Jika produk dengan $kode ditemukan, kirimkan respons JSON dengan informasi harga
+        if ($produk) {
+            $harga = $produk->harga;
+            return response()->json(['harga' => $harga]);
+        }
+
+        // Jika produk dengan $kode tidak ditemukan, kirimkan respons JSON dengan pesan error
+        return response()->json(['error' => 'Produk tidak ditemukan'], 404);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -51,17 +68,19 @@ class ProdukController extends Controller
     {
         //
         $request->validate([
-            'name' => 'required|unique:produk,name',
-            'harga' => 'required|min:3'
+            'name' => 'required',
+            'harga' => 'required|min:3',
+            'jenis_toples' => 'in:bulat,segi,tabung',
         ], [
             'name.required' => 'nama produk tidak boleh kosong !',
-            'name.unique' => 'nama produk sudah ada !',
             'harga.required' => 'harga produk tidak boleh kosong !',
             'harga.min' => 'harga produk minimal 3 digit (misal. 1000) !',
+            'jenis_toples.in' => 'Jenis toples tidak boleh kosong !',
         ]);
 
         $data = [
             'name' => $request->name,
+            'jenis_toples' => $request->jenis_toples,
             'harga' => $request->harga,
             'kode' => $request->kode,
         ];
