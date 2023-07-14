@@ -30,7 +30,7 @@
 																{{-- select pencarian produk --}}
 																<div class="mb-3">
 																		<div class="form-group">
-																				<select id="produk" class="form-control" name="produk">
+																				<select id="produk" class="form-control" name="produk" autofocus>
 																						<option selected class="text-center">-- pilih produk --</option>
 																						@foreach ($produk as $item)
 																								<option value="{{ $item->kode }}">
@@ -72,7 +72,8 @@
 
 																{{-- satuan_beli qty --}}
 																<div class="mb-3">
-																		<select id="satuan_pembelian" class="form-select form-control" name="satuan_beli" aria-label="Default select example">
+																		<select id="satuan_pembelian" class="form-select form-control" name="satuan_beli"
+																				aria-label="Default select example">
 																				<option selected>-- Pilih Satuan Pembelian --</option>
 																				<option value="pcs">Pcs</option>
 																				<option value="dus">Dus</option>
@@ -125,11 +126,11 @@
 
 												</div>
 												<div class="col-4 offset-1">
-														<div class="mb-3">
+														{{-- <div class="mb-3"> --}}
 																{{-- diskon --}}
-																<input type="number" class="form-control {{ $errors->has('diskon') ? 'is-invalid' : '' }}" id="diskon"
+																{{-- <input type="number" class="form-control {{ $errors->has('diskon') ? 'is-invalid' : '' }}" id="diskon"
 																		placeholder="Diskon ..." value="0" name="diskon">
-														</div>
+														</div> --}}
 														<p>Total Belanja :</p>
 														<div id="total_belanja" class="card bg-info fw-bold px-3 py-2 text-white">
 																Rp.0000
@@ -232,8 +233,73 @@
 
 								</div>
 								<div class="card-footer">
-										<button id="bersihkan-keranjang" class="btn btn-danger" data-confirm-delete="true">Kosongkan Keranjang</button>
-										<a href="#" id="btn-checkout" class="btn btn-warning">Checkout</a>
+
+										<!-- Button trigger modal konfirmasi delete -->
+										<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#kosongkan-keranjang">
+												Kosongkan keranjang
+										</button>
+
+										<!-- Modal -->
+										<div class="modal fade" id="kosongkan-keranjang" tabindex="-1" aria-labelledby="kosongkan-keranjangLabel"
+												aria-hidden="true">
+												<div class="modal-dialog">
+														<div class="modal-content">
+																<div class="modal-header">
+																		<h5 class="modal-title" id="exampleModalLabel">Yakin ?</h5>
+																		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																				<span aria-hidden="true">&times;</span>
+																		</button>
+																</div>
+																<div class="modal-body">
+																		<p>yakin akan mengosongkan keranjang dan menghapus bersih seluruh data belanja di dalamnya ?</p>
+																</div>
+																<div class="modal-footer">
+																		<button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+																		<button type="button" id="bersihkan-keranjang" class="btn btn-primary">Yakin</button>
+																</div>
+														</div>
+												</div>
+										</div>
+
+										<!-- Button trigger modal konfirmasi checkout -->
+										<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#konfirmasi-checkout">
+												Checkout
+										</button>
+
+										<!-- Modal -->
+										<div class="modal fade" id="konfirmasi-checkout" tabindex="-1" aria-labelledby="konfirmasi-checkoutLabel"
+												aria-hidden="true">
+												<div class="modal-dialog">
+														<div class="modal-content">
+																<div class="modal-header">
+																		<h5 class="modal-title" id="exampleModalLabel">Yakin akan melakukan Checkout ?</h5>
+																		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																				<span aria-hidden="true">&times;</span>
+																		</button>
+																</div>
+																<div class="modal-body">
+																		<div class="mb-3">
+																				<div class="alert alert-info" role="alert">
+																						<p>seluruh data dalam keranjang akan di simpan dan di proses sebagai transaksi</p>
+																				</div>
+
+																		</div>
+																		<div class="mb-3">
+																				<label for="nama_customer">Nama Customer</label>
+																				<input id="nama_customer" class="form-control" type="text" name="nama_customer"
+																						placeholder="masukan nama customer ...">
+																		</div>
+																</div>
+																<div class="modal-footer">
+																		<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+																		<button id="btn-checkout" type="button" class="btn btn-primary">Ya, Checkout</button>
+																</div>
+														</div>
+												</div>
+										</div>
+
+										{{-- <button id="bersihkan-keranjang" class="btn btn-danger" data-confirm-delete="true">Kosongkan Keranjang</button> --}}
+										{{-- <a href="#" id="btn-checkout" class="btn btn-warning">Checkout</a> --}}
 								</div>
 						</div>
 				</div>
@@ -277,10 +343,10 @@
 
 								var satuan_beli = $('#satuan_pembelian').val();
 								// console.log(satuan_beli);
-								if(satuan_beli == 'pcs'){
-									jumlah_beli_total = jumlah * 1
-								} else if(satuan_beli == 'dus') {
-									jumlah_beli_total = jumlah * 15
+								if (satuan_beli == 'pcs') {
+										jumlah_beli_total = jumlah * 1
+								} else if (satuan_beli == 'dus') {
+										jumlah_beli_total = jumlah * 15
 								}
 
 								if (harga != 0) {
@@ -341,64 +407,74 @@
 
 						// bersihkan keranjang
 						$('#bersihkan-keranjang').click(function() {
-							console.log('Bersihkan keranjang ditekan');
-
-								Swal.fire({
-										title: 'Are you sure?',
-										text: "You won't be able to revert this!",
-										icon: 'warning',
-										showCancelButton: true,
-										confirmButtonColor: '#3085d6',
-										cancelButtonColor: '#d33',
-										confirmButtonText: 'Yes, delete it!'
-								}).then((result) => {
-										if (result.isConfirmed) {
-												//aksi
-												$.ajax({
-														url: '/kosongkankeranjang',
-														method: 'POST',
-														data: {
-																_token: '{{ csrf_token() }}'
-														},
-														success: function(response) {
-																// Menghapus session 'cart' di sisi klien
-																console.log(response.message);
-																sessionStorage.removeItem('cart');
-
-																// Redirect atau lakukan tindakan lain setelah berhasil menghapus
-																// Misalnya, memuat ulang halaman atau menampilkan pesan sukses
-																window.location.reload(); // Contoh: Memuat ulang halaman
-														}
-												});
-										}
-								})
+								console.log('Bersihkan keranjang ditekan');
 
 								// Mengirim permintaan AJAX untuk menghapus session 'cart'
+								$.ajax({
+										url: '/kosongkankeranjang',
+										method: 'POST',
+										data: {
+												_token: '{{ csrf_token() }}'
+										},
+										success: function(response) {
+												// Menghapus session 'cart' di sisi klien
+												console.log(response.message);
+												sessionStorage.removeItem('cart');
+
+												// Redirect atau lakukan tindakan lain setelah berhasil menghapus
+												// Misalnya, memuat ulang halaman atau menampilkan pesan sukses
+												window.location.reload(); // Contoh: Memuat ulang halaman
+										}
+								});
 
 						});
 
 
 						// konfirmasi checkout
 						// Konfirmasi checkout
-						$('#btn-checkout').click(function(e) {
-								e.preventDefault();
+						// $('#btn-checkout').click(function(e) {
+						// 		e.preventDefault();
 
-								Swal.fire({
-										title: 'Ckeckout ?',
-										text: "Data transaksi akan disimpan",
-										icon: 'warning',
-										showCancelButton: true,
-										confirmButtonColor: '#3085d6',
-										cancelButtonColor: '#d33',
-										confirmButtonText: 'Ya, Proses Sekarang'
-								}).then((result) => {
-										if (result.isConfirmed) {
-												// Redirect ke halaman checkout
-												window.location.href = '{{ route('checkout') }}';
-										}
-								});
-						});
+						// 		Swal.fire({
+						// 				title: 'Ckeckout ?',
+						// 				text: "Data transaksi akan disimpan",
+						// 				icon: 'warning',
+						// 				showCancelButton: true,
+						// 				confirmButtonColor: '#3085d6',
+						// 				cancelButtonColor: '#d33',
+						// 				confirmButtonText: 'Ya, Proses Sekarang'
+						// 		}).then((result) => {
+						// 				if (result.isConfirmed) {
+						// 						// Redirect ke halaman checkout
+						// 						window.location.href = '{{ route('checkout') }}';
+						// 				}
+						// 		});
+						// });
 
+
+						// checkout
+						$('#btn-checkout').click(function() {
+            var namaCustomer = $('#nama_customer').val();
+
+            // Mengirim permintaan AJAX untuk menyimpan data transaksi
+            $.ajax({
+                url: '/simpan-transaksi',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    nama_customer: namaCustomer,
+                    cart: JSON.stringify(sessionStorage.getItem('cart'))
+                },
+                success: function(response) {
+                    // Redirect atau tampilkan pesan sukses
+                    // Misalnya, redirect ke halaman sukses atau tampilkan pesan dengan modal
+                    window.location.href = '{{ route('staff.penjualan.create') }}';
+                },
+                error: function(xhr, status, error) {
+                    console.error('Terjadi kesalahan: ' + error);
+                }
+            });
+        });
 
 
 				});

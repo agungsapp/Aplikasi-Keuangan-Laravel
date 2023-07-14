@@ -68,6 +68,7 @@ Route::get('/getprodukbyid/{kode}', [ProdukController::class, 'getprodukbyid']);
 Route::post('/tambahkeranjang', [PenjualanController::class, 'tambahkeranjang'])->name('tambahkeranjang');
 Route::delete('/deletekeranjang', [PenjualanController::class, 'delete_keranjang'])->name('deletekeranjang');
 Route::get('checkout', [PenjualanController::class, 'checkout'])->name('checkout');
+Route::post('simpan-transaksi', [PenjualanController::class, 'simpanTransaksi'])->name('simpantransaksi');
 Route::post('kosongkankeranjang', [PenjualanController::class, 'kosongkanKeranjang'])->name('kosongkankeranjang');
 
 

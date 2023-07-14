@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('kode_trx');
             $table->string('kode_produk');
             $table->string('jenis_toples');
-            $table->string('qty');
+            // $table->string('qty');
             $table->string('jumlah');
             $table->string('harga_satuan');
             $table->integer('sub_total');
-            $table->integer('diskon');
+            // $table->integer('diskon');
             $table->timestamps();
         });
     }

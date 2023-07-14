@@ -5,7 +5,7 @@
 <div class="row">
 
   <!-- KATEGORI Card Example -->
-  <div class="col-xl-3 col-md-6 mb-4">
+  {{-- <div class="col-xl-3 col-md-6 mb-4">
     <div class="card border-left-primary shadow h-100 py-2">
       <div class="card-body">
         <div class="row no-gutters align-items-center">
@@ -20,10 +20,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> --}}
 
   <!-- SUPLIER Card Example -->
-  <div class="col-xl-3 col-md-6 mb-4">
+  {{-- <div class="col-xl-3 col-md-6 mb-4">
     <div class="card border-left-warning shadow h-100 py-2">
       <div class="card-body">
         <div class="row no-gutters align-items-center">
@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> --}}
   <!-- PRODUK Card Example -->
   <div class="col-xl-3 col-md-6 mb-4">
     <div class="card border-left-danger shadow h-100 py-2">
@@ -78,7 +78,7 @@
 {{-- card dashboard end --}}
 
 {{-- diagram pernjualan start --}}
-<div class="row">
+{{-- <div class="row">
 
   <!-- Area penjualan -->
   <div class="col-xl-8 col-lg-7">
@@ -148,14 +148,14 @@
       </div>
     </div>
   </div>
-</div>
+</div> --}}
 {{-- diagram penjualan end --}}
 
 @endsection
-@push('scripts')
+{{-- @push('scripts')
 <!-- Page level plugins -->
 <script src="../assets/vendor/chart.js/Chart.min.js"></script>
 <!-- Page level custom scripts -->
 <script src="../assets/js/demo/chart-area-demo.js"></script>
 <script src="../assets/js/demo/chart-pie-demo.js"></script>
-@endpush
+@endpush --}}
