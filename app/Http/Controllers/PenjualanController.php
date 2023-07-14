@@ -13,6 +13,17 @@ use Illuminate\Http\Request;
 class PenjualanController extends Controller
 {
 
+    // kosongkan keranjang
+    public function kosongkanKeranjang(Request $request)
+    {
+
+        $request->session()->forget('cart');
+
+        session()->flash('toast_success', 'Berhasil membersihkan keranjang !');
+
+        return response()->json(['message' => 'Cart berhasil dihapus.']);
+    }
+
     public function checkout()
     {
         // Mendapatkan data keranjang dari session
@@ -52,14 +63,13 @@ class PenjualanController extends Controller
             'kode_trx' => $nomorTransaksi,
             'jumlah' => $jumlah,
             'total' => $total,
-            // Tambahkan kolom lain sesuai kebutuhan Anda
         ]);
 
         // Setelah selesai, hapus data keranjang dari session
         session()->forget('cart');
 
         // Redirect atau tampilkan pesan sukses
-        return redirect()->back()->with('success', 'Checkout berhasil!');
+        return redirect()->route('staff.penjualan.index')->with('success', 'Checkout berhasil!');
     }
 
     public function delete_keranjang(Request $request)
@@ -120,16 +130,18 @@ class PenjualanController extends Controller
 
         $rules = [
             'produk' => 'required',
-            'jenis_toples' => 'required',
-            'qty' => 'required',
+            // 'jenis_toples' => 'required',
+            'satuan_beli' => 'in:pcs,dus',
+            // 'qty' => 'required',
             'harga_hide' => 'required',
             'jumlah_beli' => 'required',
         ];
 
         $messages = [
             'produk.required' => 'produk tidak boleh kosong !',
-            'jenis_toples.required' => 'jenis toples harus di isi !',
-            'qty.required' => 'qty tidak boleh kosong !',
+            // 'jenis_toples.required' => 'jenis toples harus di isi !',
+            'satuan_beli.in' => 'satuan beli harus di isi !',
+            // 'qty.required' => 'qty tidak boleh kosong !',
             'harga_hide.required' => 'harga tidak boleh kosong !',
             'jumlah_beli.required' => 'jumlah beli tidak boleh kosong !',
         ];
@@ -138,8 +150,8 @@ class PenjualanController extends Controller
 
         try {
             $produk = ProdukModel::where('kode', $request->produk)->firstOrFail();
-            $jenis = KategoriModel::where('id', $request->jenis_toples)->firstOrFail();
-            $qty = QtyModel::where('id', $request->qty)->firstOrFail();
+            // $jenis = KategoriModel::where('id', $request->jenis_toples)->firstOrFail();
+            // $qty = QtyModel::where('id', $request->qty)->firstOrFail();
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['Produk tidak ditemukan.']);
         }
@@ -148,6 +160,12 @@ class PenjualanController extends Controller
 
         $cart = session()->get('cart', []);
 
+        if ($request->satuan_beli == 'pcs') {
+            $jumlah_beli = $request->jumlah_beli;
+        } else if ($request->satuan_beli == 'dus') {
+            $jumlah_beli = $request->jumlah_beli * 15; //isi pcs dalam satu dus
+        }
+
         if (isset($cart[$request->produk])) {
             $cart[$request->produk]['jumlah_beli']++;
         } else {
@@ -155,13 +173,14 @@ class PenjualanController extends Controller
                 'kode_produk' => $request->produk,
                 'nama_produk' => $produk->name,
                 'harga_satuan' => $request->harga_hide,
-                'jumlah_beli' => $request->jumlah_beli,
-                'jenis_toples' => $jenis->kategori,
-                'qty'           => $qty->name,
-                'subtotal' => $request->harga_hide * $request->jumlah_beli
+                'jumlah_beli' => $jumlah_beli,
+                'jenis_toples' => $produk->jenis_toples,
+                // 'qty'           => $qty->name,
+                'subtotal' => $request->harga_hide * $jumlah_beli
             ];
         }
         session()->put('cart', $cart);
+        // session()->forget('cart');
         return redirect()->route('staff.penjualan.create')->with('toast_success', 'Berhasil menambahkan keranjang !');
 
 

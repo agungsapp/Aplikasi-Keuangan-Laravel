@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('kode');
             $table->string('name');
+            $table->string('jenis_toples');
             $table->integer('harga');
             $table->timestamps();
         });

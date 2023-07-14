@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::name('staff.')->group(function () {
+Route::middleware(['auth'])->name('staff.')->group(function () {
     Route::resource('penjualan', PenjualanController::class);
     Route::resource('customer', CustomerController::class);
 });
@@ -68,6 +68,7 @@ Route::get('/getprodukbyid/{kode}', [ProdukController::class, 'getprodukbyid']);
 Route::post('/tambahkeranjang', [PenjualanController::class, 'tambahkeranjang'])->name('tambahkeranjang');
 Route::delete('/deletekeranjang', [PenjualanController::class, 'delete_keranjang'])->name('deletekeranjang');
 Route::get('checkout', [PenjualanController::class, 'checkout'])->name('checkout');
+Route::post('kosongkankeranjang', [PenjualanController::class, 'kosongkanKeranjang'])->name('kosongkankeranjang');
 
 
 
@@ -110,10 +111,11 @@ Route::get('checkout', [PenjualanController::class, 'checkout'])->name('checkout
 // - fitur checkout sudah berjalan dan melakukan insert ke tabel detail_transaksi dan tabel penjualan
 
 // next : 
-// - buat fitur bersihkan keranjang
+// - buat fitur bersihkan keranjang | done 
 // - nama produk di gabung dengan jenis toplesnya
 // - pematangan qty dengan type dus, toples, paket, karena di rasa kurang
 // - pada halaman transaksi lama , kode transaksi harusnya bisa di klik dan melihat isi detail transaksi nya. 
+// - laporan
 
 // (optional :)
 // - stream_bucket_append

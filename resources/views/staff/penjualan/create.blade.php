@@ -33,7 +33,8 @@
 																				<select id="produk" class="form-control" name="produk">
 																						<option selected class="text-center">-- pilih produk --</option>
 																						@foreach ($produk as $item)
-																								<option value="{{ $item->kode }}">{{ $item->kode . ' | ' . $item->name }}
+																								<option value="{{ $item->kode }}">
+																										{{ $item->kode . ' | ' . $item->name . ' | ' . $item->jenis_toples }}
 																								</option>
 																						@endforeach
 
@@ -57,7 +58,7 @@
 																</div> --}}
 
 																{{-- select tipe toples --}}
-																<div class="mb-3">
+																{{-- <div class="mb-3">
 																		<div class="form-group">
 																				<select class="form-control" name="jenis_toples" id="jenis_toples">
 																						<option selected class="text-center">-- pilih jenis toples --</option>
@@ -67,10 +68,20 @@
 
 																				</select>
 																		</div>
-																</div>
+																</div> --}}
 
-																{{-- select qty --}}
+																{{-- satuan_beli qty --}}
 																<div class="mb-3">
+																		<select id="satuan_pembelian" class="form-select form-control" name="satuan_beli" aria-label="Default select example">
+																				<option selected>-- Pilih Satuan Pembelian --</option>
+																				<option value="pcs">Pcs</option>
+																				<option value="dus">Dus</option>
+																				{{-- <option value="paket">Paket</option>
+																				<option value="tabung">Tabung</option> --}}
+																		</select>
+																</div>
+																{{-- select qty --}}
+																{{-- <div class="mb-3">
 																		<div class="form-group">
 																				<select class="form-control" name="qty" id="qty">
 																						<option class="text-center">-- pilih jenis qty --</option>
@@ -79,7 +90,7 @@
 																						@endforeach
 																				</select>
 																		</div>
-																</div>
+																</div> --}}
 
 																{{-- jumlah pembelian --}}
 																<div class="mb-3">
@@ -116,8 +127,8 @@
 												<div class="col-4 offset-1">
 														<div class="mb-3">
 																{{-- diskon --}}
-																<input type="number" class="form-control {{ $errors->has('diskon') ? 'is-invalid' : '' }}"
-																		id="diskon" placeholder="Diskon ..." value="0" name="diskon">
+																<input type="number" class="form-control {{ $errors->has('diskon') ? 'is-invalid' : '' }}" id="diskon"
+																		placeholder="Diskon ..." value="0" name="diskon">
 														</div>
 														<p>Total Belanja :</p>
 														<div id="total_belanja" class="card bg-info fw-bold px-3 py-2 text-white">
@@ -165,8 +176,8 @@
 																		<th scope="col">No</th>
 																		<th scope="col">Kode Produk</th>
 																		<th scope="col">Nama Produk</th>
-																		<th scope="col">Tipe Toples</th>
-																		<th scope="col">Qty</th>
+																		<th scope="col">Jenis Toples</th>
+																		{{-- <th scope="col">Qty</th> --}}
 																		<th scope="col">Jumlah</th>
 																		<th scope="col">Harga Satuan</th>
 																		<th scope="col">Total</th>
@@ -177,6 +188,8 @@
 																<!-- Contoh bagian dalam tabel untuk menampilkan isi keranjang -->
 																@php
 																		$cart = session()->get('cart', []);
+																		$total_bayar = 0;
+																		$jumlah = 0;
 																@endphp
 																@if ($cart != null)
 																		@foreach ($cart as $item)
@@ -185,7 +198,7 @@
 																						<td>{{ $item['kode_produk'] }}</td>
 																						<td>{{ $item['nama_produk'] }}</td>
 																						<td>{{ $item['jenis_toples'] }}</td>
-																						<td>{{ $item['qty'] }}</td>
+																						{{-- <td>{{ $item['qty'] }}</td> --}}
 																						<td>{{ $item['jumlah_beli'] }}</td>
 																						<td>Rp. {{ number_format($item['harga_satuan']) }}</td>
 																						<td>Rp. {{ number_format($item['subtotal']) }}</td>
@@ -193,7 +206,20 @@
 																								<button href="#" class="btn btn-danger btn-delete">Hapus</button>
 																						</td>
 																				</tr>
+																				@php
+																						$total_bayar += $item['subtotal'];
+																						$jumlah += $item['jumlah_beli'];
+																				@endphp
 																		@endforeach
+																		<tr class="bg-dark text-white">
+																				<td colspan="4" align="right">jumlah =</td>
+																				<td>{{ $jumlah }}</td>
+																				<td align="right">Total =</td>
+																				<td>
+																						Rp. {{ number_format($total_bayar) }}
+																				</td>
+																				<td></td>
+																		</tr>
 																@else
 																		<tr>
 																				<td colspan="100" class="text-center">-- Keranjang Masih Kosong --</td>
@@ -206,8 +232,8 @@
 
 								</div>
 								<div class="card-footer">
-										<a href="#" class="btn btn-danger" data-confirm-delete="true">Kosongkan Keranjang</a>
-										<a href="{{ route('checkout') }}" class="btn btn-warning">Checkout</a>
+										<button id="bersihkan-keranjang" class="btn btn-danger" data-confirm-delete="true">Kosongkan Keranjang</button>
+										<a href="#" id="btn-checkout" class="btn btn-warning">Checkout</a>
 								</div>
 						</div>
 				</div>
@@ -249,8 +275,16 @@
 								var harga = $('#harga_hide').val();
 								var total = $('#total_belanja'); // Perbaiki pemilihan elemen total belanja
 
+								var satuan_beli = $('#satuan_pembelian').val();
+								// console.log(satuan_beli);
+								if(satuan_beli == 'pcs'){
+									jumlah_beli_total = jumlah * 1
+								} else if(satuan_beli == 'dus') {
+									jumlah_beli_total = jumlah * 15
+								}
+
 								if (harga != 0) {
-										var total_belanja = parseInt(harga) * jumlah;
+										var total_belanja = parseInt(harga) * jumlah_beli_total;
 										console.log(total_belanja);
 										var formattedTotal = formatRupiah(total_belanja); // Memformat nilai total belanja
 										total.html(formattedTotal);
@@ -303,6 +337,69 @@
 										})
 								}
 						})
+
+
+						// bersihkan keranjang
+						$('#bersihkan-keranjang').click(function() {
+							console.log('Bersihkan keranjang ditekan');
+
+								Swal.fire({
+										title: 'Are you sure?',
+										text: "You won't be able to revert this!",
+										icon: 'warning',
+										showCancelButton: true,
+										confirmButtonColor: '#3085d6',
+										cancelButtonColor: '#d33',
+										confirmButtonText: 'Yes, delete it!'
+								}).then((result) => {
+										if (result.isConfirmed) {
+												//aksi
+												$.ajax({
+														url: '/kosongkankeranjang',
+														method: 'POST',
+														data: {
+																_token: '{{ csrf_token() }}'
+														},
+														success: function(response) {
+																// Menghapus session 'cart' di sisi klien
+																console.log(response.message);
+																sessionStorage.removeItem('cart');
+
+																// Redirect atau lakukan tindakan lain setelah berhasil menghapus
+																// Misalnya, memuat ulang halaman atau menampilkan pesan sukses
+																window.location.reload(); // Contoh: Memuat ulang halaman
+														}
+												});
+										}
+								})
+
+								// Mengirim permintaan AJAX untuk menghapus session 'cart'
+
+						});
+
+
+						// konfirmasi checkout
+						// Konfirmasi checkout
+						$('#btn-checkout').click(function(e) {
+								e.preventDefault();
+
+								Swal.fire({
+										title: 'Ckeckout ?',
+										text: "Data transaksi akan disimpan",
+										icon: 'warning',
+										showCancelButton: true,
+										confirmButtonColor: '#3085d6',
+										cancelButtonColor: '#d33',
+										confirmButtonText: 'Ya, Proses Sekarang'
+								}).then((result) => {
+										if (result.isConfirmed) {
+												// Redirect ke halaman checkout
+												window.location.href = '{{ route('checkout') }}';
+										}
+								});
+						});
+
+
 
 				});
 		</script>

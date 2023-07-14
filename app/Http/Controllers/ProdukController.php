@@ -68,17 +68,19 @@ class ProdukController extends Controller
     {
         //
         $request->validate([
-            'name' => 'required|unique:produk,name',
-            'harga' => 'required|min:3'
+            'name' => 'required',
+            'harga' => 'required|min:3',
+            'jenis_toples' => 'in:bulat,segi,tabung',
         ], [
             'name.required' => 'nama produk tidak boleh kosong !',
-            'name.unique' => 'nama produk sudah ada !',
             'harga.required' => 'harga produk tidak boleh kosong !',
             'harga.min' => 'harga produk minimal 3 digit (misal. 1000) !',
+            'jenis_toples.in' => 'Jenis toples tidak boleh kosong !',
         ]);
 
         $data = [
             'name' => $request->name,
+            'jenis_toples' => $request->jenis_toples,
             'harga' => $request->harga,
             'kode' => $request->kode,
         ];
