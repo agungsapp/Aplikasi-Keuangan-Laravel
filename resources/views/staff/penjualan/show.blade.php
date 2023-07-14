@@ -21,33 +21,33 @@
 																		<th scope="col">Tgl Transaksi</th>
 																</tr>
 														</thead>
-<tbody>
-    @php
-        $totalBarang = 0;
-        $totalBelanja = 0;
-    @endphp
-    @foreach ($data as $item)
-        <tr>
-            <th scope="row">{{ $loop->iteration }}</th>
-            <td>{{ $item->name }}</td>
-            <td>{{ $item->jenis_toples }}</td>
-            <td>{{ $item->jumlah }}</td>
-            <td>{{ Str::rupiah($item->harga_satuan) }}</td>
-            <td>{{ Str::rupiah($item->sub_total) }}</td>
-            <td>{{ $item->created_at }}</td>
-        </tr>
-        @php
-            $totalBarang += $item->jumlah;
-            $totalBelanja += $item->sub_total;
-        @endphp
-    @endforeach
-    <tr class="bg-dark text-white font-weight-bold">
-        <td align="right" colspan="3">Total barang : </td>
-        <td>{{ $totalBarang }}</td>
-        <td>Total Belanja :</td>
-        <td colspan="2"> = {{ Str::rupiah($totalBelanja) }}</td>
-    </tr>
-</tbody>
+														<tbody>
+																@php
+																		$totalBarang = 0;
+																		$totalBelanja = 0;
+																@endphp
+																@foreach ($data as $item)
+																		<tr>
+																				<th scope="row">{{ $loop->iteration }}</th>
+																				<td>{{ $item->name }}</td>
+																				<td>{{ $item->jenis_toples }}</td>
+																				<td>{{ $item->jumlah }}</td>
+																				<td>{{ Str::rupiah($item->harga_satuan) }}</td>
+																				<td>{{ Str::rupiah($item->sub_total) }}</td>
+																				<td>{{ $item->created_at }}</td>
+																		</tr>
+																		@php
+																				$totalBarang += $item->jumlah;
+																				$totalBelanja += $item->sub_total;
+																		@endphp
+																@endforeach
+																<tr class="bg-dark font-weight-bold text-white">
+																		<td align="right" colspan="3">Total barang : </td>
+																		<td>{{ $totalBarang }}</td>
+																		<td>Total Belanja :</td>
+																		<td colspan="2"> = {{ Str::rupiah($totalBelanja) }}</td>
+																</tr>
+														</tbody>
 
 												</table>
 										</div>

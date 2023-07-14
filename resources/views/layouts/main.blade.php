@@ -165,8 +165,8 @@
 						<div class="sidebar-heading">
 								LAPORAN
 						</div>
-						<li class="nav-item">
-								<a class="nav-link" href="index.html">
+						<li class="nav-item {{ \Route::is('laporan.*') ? 'active' : '' }}">
+								<a class="nav-link" href="{{ route('laporan.index') }}">
 										<i class="fas fa-fw fa-file"></i>
 										<span>Laporan</span></a>
 						</li>

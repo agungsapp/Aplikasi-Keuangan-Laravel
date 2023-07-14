@@ -3,6 +3,7 @@
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\ProdukController;
@@ -70,7 +71,7 @@ Route::delete('/deletekeranjang', [PenjualanController::class, 'delete_keranjang
 Route::get('checkout', [PenjualanController::class, 'checkout'])->name('checkout');
 Route::post('simpan-transaksi', [PenjualanController::class, 'simpanTransaksi'])->name('simpantransaksi');
 Route::post('kosongkankeranjang', [PenjualanController::class, 'kosongkanKeranjang'])->name('kosongkankeranjang');
-
+Route::resource('laporan', LaporanController::class);
 
 
 // Route::name('staff.')->group(function () {
